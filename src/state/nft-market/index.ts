@@ -8,6 +8,7 @@ import { NFT } from "./interfaces";
 import useListedNFTs from "./useListedNFTs";
 import useOwnedListedNFTs from "./useOwnedListedNFTs";
 import useOwnedNFTs from "./useOwnedNFTs";
+import { toast } from "react-toastify";
 
 const useNFTMarket = () => {
   const { signer } = useSigner();
@@ -27,15 +28,22 @@ const useNFTMarket = () => {
         method: "POST",
         body: data,
       });
+
+      console.log("resp1:", response );
       if (response.status == 201) {
         const json = await response.json();
         const transaction: TransactionResponse = await nftMarket.createNFT(
           json.uri
         );
-        await transaction.wait();
+        const transactionResp = await transaction.wait();
+        toast.success("You'll see your new NFT here shortly. Refresh the page.");
+        // console.log('transactionResp', transactionResp)
       }
-    } catch (e) {
+    } catch (e: any) {
       console.log(e);
+      if(e.code === 4001){
+        toast.error("Transaction rejected");
+      }
     }
   };
 

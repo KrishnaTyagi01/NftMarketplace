@@ -11,8 +11,10 @@ const CreationPage = () => {
 
   const onSubmit = async (values: CreationValues) => {
     try {
-      await createNFT(values);
-      toast.success("You'll see your new NFT here shortly. Refresh the page.");
+      const resp = await createNFT(values);
+
+      console.log("response", resp);
+      // toast.success("You'll see your new NFT here shortly. Refresh the page.");
     } catch (e) {
       toast.warn("Something wrong!");
       console.log(e);
